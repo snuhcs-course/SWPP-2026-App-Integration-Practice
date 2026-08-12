@@ -1,0 +1,13 @@
+# Week 6 - App Integration (server side)
+# Pin these. create_agent is the LangChain 1.0 replacement for create_react_agent,
+# so a floating version breaks the lab on the day.
+
+django==5.2.*
+langchain==1.3.14
+langgraph==1.2.10
+langchain-openai==1.4.2
+pydantic==2.*
+python-dotenv==1.*
+
+# tests
+pytest==8.*
