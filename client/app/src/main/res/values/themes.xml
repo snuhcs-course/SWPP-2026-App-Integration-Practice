@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- DESIGN.md: "The system has no light-mode surface." Always dark. -->
+    <style name="Base.Theme.EscapeRoom" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorOutline">@color/hairline_strong</item>
+        <item name="android:colorBackground">@color/canvas</item>
+        <item name="android:statusBarColor">@color/canvas</item>
+        <item name="android:navigationBarColor">@color/canvas</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.EscapeRoom" parent="Base.Theme.EscapeRoom" />
+
+    <!-- typography.caption-uppercase: 12sp / 600 / +1.5px tracking -->
+    <style name="Text.CaptionUpper" parent="">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/muted</item>
+    </style>
+
+    <!-- typography.title-sm: 16sp / 600 -->
+    <style name="Text.TitleSm" parent="">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/ink</item>
+    </style>
+
+    <!-- typography.body-md -->
+    <style name="Text.Body" parent="">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.35</item>
+        <item name="android:textColor">@color/body</item>
+    </style>
+
+    <!-- typography.body-sm -->
+    <style name="Text.BodySm" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+        <item name="android:textColor">@color/body</item>
+    </style>
+</resources>

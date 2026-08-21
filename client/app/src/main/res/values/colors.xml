@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tokens from DESIGN.md. Never inline a hex anywhere else. -->
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- brand -->
+    <color name="primary">#faff69</color>
+    <color name="primary_active">#e6eb52</color>
+    <color name="primary_disabled">#3a3a1f</color>
+    <color name="on_primary">#0a0a0a</color>
+
+    <!-- surface -->
+    <color name="canvas">#0a0a0a</color>
+    <color name="surface_soft">#121212</color>
+    <color name="surface_card">#1a1a1a</color>
+    <color name="surface_elevated">#242424</color>
+    <color name="hairline">#2a2a2a</color>
+    <color name="hairline_strong">#3a3a3a</color>
+
+    <!-- text -->
+    <color name="ink">#ffffff</color>
+    <color name="body">#cccccc</color>
+    <color name="body_strong">#e6e6e6</color>
+    <color name="muted">#888888</color>
+    <color name="muted_soft">#5a5a5a</color>
+
+    <!-- semantic -->
+    <color name="accent_emerald">#22c55e</color>
+    <color name="accent_rose">#ef4444</color>
+</resources>

@@ -1,4 +1,4 @@
-package com.swpp.escaperoom.util
+package com.example.escaperoom.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,16 +10,16 @@ import kotlin.math.max
 /**
  * Seam 1, the part nobody expects — payload size.
  *
- * A modern phone camera gives you roughly 4000 x 3000. Encoded as JPEG that is about
- * 4 MB; Base64 adds another 33%, so you POST ~5.5 MB of text. On mobile data the
- * request appears to hang, then OkHttp times out, and it looks like a network bug.
- * Django will answer 413 long before the model ever sees it.
- *
- * Downscaling to 1024px costs you nothing the vision model can use: it is counting
- * the sides of a polygon, not reading fine print.
+ * A phone camera gives you roughly 4000 x 3000. As JPEG that is about 4 MB; Base64
+ * adds another 33%, so you POST ~5.5 MB of text. On mobile data the request appears
+ * to hang, then OkHttp times out, and it looks like a network bug. Django answers
+ * 413 long before the model ever sees it.
  *
  *     4000 x 3000 JPEG  ->  ~5.5 MB base64      server says 413
  *     1024 x  768 JPEG  ->  ~180 KB base64      fine
+ *
+ * Downscaling costs the vision model nothing it can use: it is counting the sides of
+ * a polygon, not reading fine print.
  */
 object ImageUtils {
 
@@ -30,19 +30,22 @@ object ImageUtils {
      * TODO-5: turn the captured file into a Base64 string the server will accept.
      *
      *   1. BitmapFactory.decodeFile(file.absolutePath)
-     *   2. downscale so that the longer edge is at most MAX_EDGE  (see downscale below)
+     *   2. downscale so the longer edge is at most MAX_EDGE  (helper below)
      *   3. compress to JPEG at JPEG_QUALITY into a ByteArrayOutputStream
      *   4. Base64.encodeToString(bytes, Base64.NO_WRAP)
      *
-     * NO_WRAP matters. The default inserts newlines every 76 characters and the JSON
-     * body you send becomes invalid.
+     * NO_WRAP matters. The default inserts a newline every 76 characters and the JSON
+     * body you send becomes invalid — Django answers 400 and says very little.
+     *
+     * Send the raw base64. Do NOT prefix "data:image/jpeg;base64," — the server adds
+     * that itself before handing the image to the vision model.
      */
     fun fileToBase64(file: File): String {
         // TODO-5
         return ""
     }
 
-    /** Keeps the aspect ratio. Given for free — the interesting part is TODO-5. */
+    /** Keeps the aspect ratio. Given for free — the interesting part is above. */
     fun downscale(src: Bitmap, maxEdge: Int = MAX_EDGE): Bitmap {
         val longest = max(src.width, src.height)
         if (longest <= maxEdge) return src
@@ -52,6 +55,6 @@ object ImageUtils {
         )
     }
 
-    /** Handy while debugging TODO-5: log this before you POST. */
+    /** Log this before you POST. Expect about 180, not 5500. */
     fun sizeKb(base64: String): Int = base64.length / 1024
 }

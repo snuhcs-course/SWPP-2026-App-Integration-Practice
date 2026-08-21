@@ -17,6 +17,13 @@ The reference implementation is at the bottom; the student handout ships without
 
 from __future__ import annotations
 
+# These four imports are already here for you. Exercises 1 and 2 need all of them,
+# and tests/test_agent_wiring.py swaps ChatOpenAI out for a fake model.
+from langchain.agents import create_agent
+from langchain.agents.middleware import ModelCallLimitMiddleware
+from langchain_core.messages import AIMessage
+from langchain_openai import ChatOpenAI
+
 from .game import CODE_LENGTH, MAX_TURNS, get, new_session, record_turn
 from .tools import TOOLS
 
@@ -90,11 +97,6 @@ def take_turn(session_id: str, player_text: str,
 # --------------------------------------------------------------- reference
 def _reference_take_turn(session_id: str, player_text: str,
                          image_base64: str | None = None) -> dict:
-    from langchain.agents import create_agent
-    from langchain.agents.middleware import ModelCallLimitMiddleware
-    from langchain_core.messages import AIMessage
-    from langchain_openai import ChatOpenAI
-
     session = get(session_id)
     if session is None:
         return {"error": "no such session"}

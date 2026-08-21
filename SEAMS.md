@@ -11,10 +11,10 @@ Every TODO below sits on an arrow, never inside a box. That is deliberate.
 |---|---|---|---|
 | **1** | Django → Agent | `build_agent()` — tools, prompt, call cap | `server/enigma_agent.py` |
 | **2** | Agent → Django | `take_turn()` — park the photo, run the agent | `server/enigma_agent.py` |
-| **3** | Android → Django | `BASE_URL` + read timeout | `android/RetrofitInstance.kt` |
-| **4** | CameraX → app | `startCamera()` | `android/CameraActivity.kt` |
-| **5** | Camera → payload | `fileToBase64()` — downscale + `NO_WRAP` | `android/ImageUtils.kt` |
-| **6** | Django → Android | `say()` — coroutine, LiveData, `finally` | `android/GameViewModel.kt` |
+| **3** | Android → Django | `BASE_URL` + read timeout | `data/network/RetrofitInstance.kt` |
+| **4** | CameraX → app | `startCamera()` | `ui/camera/CameraActivity.kt` |
+| **5** | Camera → payload | `fileToBase64()` — downscale + `NO_WRAP` | `util/ImageUtils.kt` |
+| **6** | Django → Android | `say()` — coroutine, LiveData, `finally` | `ui/main/GameViewModel.kt` |
 | — | Agent → VLM | given, read it | `server/tools.py` · `server/vision.py` |
 
 In the code the markers are `TODO-1` … `TODO-6`, matching the exercise numbers.
@@ -28,12 +28,12 @@ In the code the markers are `TODO-1` … `TODO-6`, matching the exercise numbers
 POST /escape/sessions/                  -> SessionState
 POST /escape/sessions/<id>/say/         {"text": ..., "image_base64": ...?} -> SayResponse
 ```
-`ApiService.kt` and `views_snippet.py` must agree field for field. `image_base64` is
+`ApiService.kt` and `escaperoom/views.py` must agree field for field. `image_base64` is
 optional: one endpoint, with or without a photo.
 
 **How it breaks**
 - `127.0.0.1` from the emulator points at the emulator, not your laptop
-- Android blocks cleartext HTTP unless `network_security_config.xml` allows it
+- Android blocks cleartext HTTP unless the manifest allows it (SnapDo already does)
 - a renamed field becomes a silent `null`, three layers from where it hurts
 - the default 10-second read timeout kills a 5-second VLM turn and looks like a network bug
 
@@ -142,7 +142,13 @@ radius, do not pretend the VLM is trustworthy.
 
 ## The integration test
 
-No unit test spans four components. `simulated_player.py` does:
+No unit test spans four components. Two things here do.
+
+`tests/test_agent_wiring.py` runs your agent against a **fake model** — scripted to
+call a tool — so it needs no API key. It proves the graph is built, the tools are
+bound, and the photo reaches `scan_shape` without ever entering the transcript.
+
+`simulated_player.py` plays whole games:
 
 ```
 python simulated_player.py --games 40
@@ -156,3 +162,5 @@ python simulated_player.py --games 40
 ```
 
 `--live` runs it through the real agent and the real VLM.
+
+See README, **Running it for real**, for the four levels of verification.

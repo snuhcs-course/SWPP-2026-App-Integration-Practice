@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">EscapeRoom</string>
+    <string name="connecting">connecting…</string>
+    <string name="empty_hint">Nothing yet.\n\nIf this never changes, the app cannot reach
+        the server.\n\n1  is the server running?\n2  is BASE_URL your LAN IP, not
+        127.0.0.1?\n3  same Wi-Fi?\n\nThat is Exercise 3.</string>
+    <string name="say_something">say something</string>
+    <string name="send">Send</string>
+    <string name="key">Key</string>
+    <string name="back">Back</string>
+    <string name="switch_camera">Switch</string>
+    <string name="capture">Capture</string>
+    <string name="use_this_key">Use this key</string>
+    <string name="retake">Retake</string>
+    <string name="captured_shape">the shape you captured</string>
+    <string name="camera_hint">hold one polygon flat to the lens</string>
+    <string name="no_server">no server — check BASE_URL (Exercise 3)</string>
+</resources>
