@@ -17,20 +17,20 @@ import java.util.concurrent.TimeUnit
  */
 object RetrofitInstance {
 
-    // TODO-3: replace with your own IP. Keep exactly one trailing slash.
+    // TODO-1: replace with your own IP. Keep exactly one trailing slash.
     private const val BASE_URL = "http://XXX.XXX.XXX.XXX:8000/"
 
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BASIC   // BODY prints 180 KB of base64
     }
 
-    // TODO-3, the half everyone forgets. A turn takes 2-5 seconds because a model is
-    // thinking. OkHttp's default read timeout is 10s, and when it fires the failure
-    // looks like a network bug rather than a timeout.
+    // TODO-1, the half everyone forgets. One model response often takes 2-5 seconds.
+    // A turn can include multiple model, tool, and vision round trips, so its total can
+    // exceed OkHttp's default 10-second read timeout and look like a network bug.
     private val client = OkHttpClient.Builder()
         .addInterceptor(logging)
         .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
+        // TODO-1: configure a read timeout long enough for one model turn.
         .build()
 
     val api: ApiService by lazy {

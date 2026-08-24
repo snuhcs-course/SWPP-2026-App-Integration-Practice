@@ -1,0 +1,17 @@
+# Python runtime and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local development files
+.DS_Store
+.idea/
+.env
+DESIGN.md
+_to_delete/
+
+# Android local/build output
+client/.gradle/
+client/.kotlin/
+client/local.properties
+client/**/build/

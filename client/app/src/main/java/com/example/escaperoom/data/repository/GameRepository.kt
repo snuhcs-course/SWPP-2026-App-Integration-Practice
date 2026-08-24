@@ -6,8 +6,8 @@ import com.example.escaperoom.data.network.SayRequest
 import com.example.escaperoom.data.network.SayResponse
 
 /**
- * The only class that knows Retrofit exists. Same role TodoRepository played in
- * SnapDo. Activities never call the network; the ViewModel calls this.
+ * The only class that knows Retrofit exists. Activities never call the network;
+ * the ViewModel calls this repository.
  */
 class GameRepository {
 

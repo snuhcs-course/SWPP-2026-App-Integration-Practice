@@ -25,8 +25,8 @@ import java.io.File
  * The keypad. Point it at the polygon you want to press and hit the shutter —
  * a hexagon presses 6.
  *
- * Same CameraX shape as SnapDo, with one deliberate difference: this screen does NOT
- * call the network. It encodes the photo and hands the string back through setResult.
+ * This screen does not call the network. It encodes the photo and hands the string
+ * back through setResult.
  * MainActivity gives it to the ViewModel, and the ViewModel talks to the server.
  */
 class CameraActivity : AppCompatActivity() {
@@ -132,16 +132,12 @@ class CameraActivity : AppCompatActivity() {
     }
 
     /**
-     * TODO-4: bring up the preview.
+     * TODO-4: bind a working preview and still-image capture for `lensFacing`.
      *
-     *   1. ProcessCameraProvider.getInstance(this) — it returns a ListenableFuture
-     *   2. addListener(..., ContextCompat.getMainExecutor(this))
-     *   3. build a Preview and call setSurfaceProvider(previewView.surfaceProvider)
-     *   4. build an ImageCapture and keep it in `imageCapture`
-     *   5. provider.unbindAll(), then bindToLifecycle(this, selector, preview, imageCapture)
-     *
-     * unbindAll() is the line students forget. Without it, tapping "switch camera"
-     * binds a second set of use cases to the same lifecycle and CameraX throws.
+     * The preview must render into `previewView`, the shutter must receive a non-null
+     * `imageCapture`, and calling this method again after switching lenses must replace
+     * the old CameraX bindings instead of stacking another set on the lifecycle. Camera
+     * provider callbacks belong on the main executor.
      */
     private fun startCamera() {
         // TODO-4

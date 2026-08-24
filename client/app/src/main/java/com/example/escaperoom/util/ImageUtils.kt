@@ -29,16 +29,10 @@ object ImageUtils {
     /**
      * TODO-5: turn the captured file into a Base64 string the server will accept.
      *
-     *   1. BitmapFactory.decodeFile(file.absolutePath)
-     *   2. downscale so the longer edge is at most MAX_EDGE  (helper below)
-     *   3. compress to JPEG at JPEG_QUALITY into a ByteArrayOutputStream
-     *   4. Base64.encodeToString(bytes, Base64.NO_WRAP)
-     *
-     * NO_WRAP matters. The default inserts a newline every 76 characters and the JSON
-     * body you send becomes invalid — Django answers 400 and says very little.
-     *
-     * Send the raw base64. Do NOT prefix "data:image/jpeg;base64," — the server adds
-     * that itself before handing the image to the vision model.
+     * Decode the captured image, preserve its aspect ratio while limiting the longest
+     * edge to MAX_EDGE, and encode a JPEG at JPEG_QUALITY. The returned Base64 must be a
+     * single unwrapped string. Return only the raw payload: the server, not the client,
+     * adds any media-type prefix.
      */
     fun fileToBase64(file: File): String {
         // TODO-5

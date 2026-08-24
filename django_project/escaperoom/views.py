@@ -28,7 +28,7 @@ from django.views.decorators.http import require_GET, require_POST
 from server.game import MAX_TURNS, get, new_session, public_state
 
 # ESCAPE_FAKE_MODEL=1 swaps the whole agent for a scripted stand-in that calls no
-# model at all, so the client exercises (3-6) can be done without an API key.
+# model at all, so the client exercises (1, 4-6) can be done without an API key.
 # It is a development stub and it cheats: see server/offline.py.
 if os.environ.get("ESCAPE_FAKE_MODEL"):
     from server.offline import take_turn

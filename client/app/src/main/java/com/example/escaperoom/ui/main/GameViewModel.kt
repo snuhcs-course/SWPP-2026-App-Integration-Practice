@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 /**
  * Seam 2 — the async boundary.
  *
- * MVVM, exactly as in SnapDo: the Activity observes LiveData, the ViewModel owns the
- * coroutine, the Repository owns the network call. The Activity never touches Retrofit.
+ * The Activity observes LiveData, the ViewModel owns the coroutine, and the Repository
+ * owns the network call. The Activity never touches Retrofit.
  *
  * The happy path is not the interesting part. The interesting part is what the UI
- * shows while the Enigma is thinking — a turn takes 2 to 5 seconds — and what it
- * shows when the server cannot be reached.
+ * shows while the Enigma is working across one or more model calls, and what it shows
+ * when the server cannot be reached.
  */
 class GameViewModel(private val repository: GameRepository) : ViewModel() {
 
@@ -57,17 +57,11 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
     /**
      * TODO-6: send one turn — text, and optionally the photo from CameraActivity.
      *
-     *   1. read the session id from _state.value (return if it is null)
-     *   2. append Line("you", text, imageBase64 != null)
-     *   3. _thinking.value = true
-     *   4. val response = repository.say(sessionId, text, imageBase64)   // suspend
-     *   5. append Line("enigma", response.reply)
-     *   6. _state.value = response.state
-     *   7. _thinking.value = false  — in a finally block, or one thrown exception
-     *      leaves the spinner on screen for the rest of the game
-     *
-     * Roughly ten lines. The judgement is where try / catch / finally go, and what
-     * the user sees for the five seconds in between.
+     * Ignore the request until a session exists. Once it does, show the player's line
+     * immediately (including whether it had a photo), expose a thinking state for exactly
+     * the lifetime of the suspend network call, then append the Enigma reply and publish
+     * the returned session state. Network failures must be logged and shown through
+     * `error`, and no failure may leave the thinking indicator stuck on.
      */
     fun say(text: String, imageBase64: String? = null) {
         viewModelScope.launch {
@@ -80,7 +74,7 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
     }
 }
 
-/** Same shape as SnapDo's MainViewModelFactory. */
+/** Supplies the repository dependency when Android creates the ViewModel. */
 class GameViewModelFactory(private val repository: GameRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {

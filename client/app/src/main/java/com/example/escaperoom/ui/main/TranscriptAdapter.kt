@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.escaperoom.R
 import com.example.escaperoom.data.model.Line
 
-/** Same shape as SnapDo's TodoAdapter, one line of dialogue per row. */
+/** Renders one line of dialogue per row. */
 class TranscriptAdapter(
     private var items: List<Line>
 ) : RecyclerView.Adapter<TranscriptAdapter.LineViewHolder>() {
@@ -20,7 +20,6 @@ class TranscriptAdapter(
         private val text: TextView = view.findViewById(R.id.tvText)
 
         fun bind(line: Line) {
-            // DESIGN.md: depth comes from canvas-vs-surface-card contrast, not shadow.
             // The Enigma speaks from a card; the player's lines sit flat on the canvas.
             val isEnigma = line.speaker == "enigma"
             val ctx = itemView.context

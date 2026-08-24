@@ -7,17 +7,15 @@ The contract with Django never changes:
 Django calls it, Django writes the turn row, Django decides what the phone sees.
 The agent only produces words and tool calls.
 
-    TODO-1  build_agent()   - tools, prompt, call cap
-    TODO-2  take_turn()     - stash the photo, run the agent, collect the trajectory
-
-The reference implementation is at the bottom; the student handout ships without it.
+    TODO-2  build_agent()   - tools, prompt, call cap
+    TODO-3  take_turn()     - stash the photo, run the agent, collect the trajectory
 
     OPENAI_API_KEY=... python -m server.enigma_agent
 """
 
 from __future__ import annotations
 
-# These four imports are already here for you. Exercises 1 and 2 need all of them,
+# These four imports are already here for you. Exercises 2 and 3 need all of them,
 # and tests/test_agent_wiring.py swaps ChatOpenAI out for a fake model.
 from langchain.agents import create_agent
 from langchain.agents.middleware import ModelCallLimitMiddleware
@@ -70,63 +68,37 @@ could do with it if there were.
 The player has {MAX_TURNS} turns."""
 
 
-# ------------------------------------------------------------------- TODO-1
-def build_agent():
-    """TODO-1: return create_agent(...) with
-         model=ChatOpenAI(model=MODEL)
-         tools=TOOLS
-         system_prompt=SYSTEM_PROMPT
-         middleware=[ModelCallLimitMiddleware(thread_limit=6, exit_behavior="end")]
-    """
-    raise NotImplementedError("TODO-1")
-
-
 # ------------------------------------------------------------------- TODO-2
-def take_turn(session_id: str, player_text: str,
-              image_base64: str | None = None) -> dict:
-    """TODO-2:
-         1. look the session up; put image_base64 on session["pending_image"]
-            (do NOT pass the image to the agent - that is the point of seam 5)
-         2. run the agent on player_text
-         3. collect which tools it called - that list is the trajectory
-         4. record_turn(...) and return {"reply", "tools_called", "had_image"}
+def build_agent():
+    """TODO-2: construct and return the runnable Enigma agent.
+
+    Use the supplied model name, tool scope and system prompt. Limit one thread to at
+    most six model calls and end the turn cleanly when that budget is exhausted. Do not
+    add tools or put session secrets into the prompt.
     """
     raise NotImplementedError("TODO-2")
 
 
-# --------------------------------------------------------------- reference
-def _reference_take_turn(session_id: str, player_text: str,
-                         image_base64: str | None = None) -> dict:
-    session = get(session_id)
-    if session is None:
-        return {"error": "no such session"}
+# ------------------------------------------------------------------- TODO-3
+def take_turn(session_id: str, player_text: str,
+              image_base64: str | None = None) -> dict:
+    """TODO-3: connect one Django turn to the agent.
 
-    # The photo goes on the session, not into the prompt. One turn only.
-    session["pending_image"] = image_base64
-
-    agent = create_agent(
-        model=ChatOpenAI(model=MODEL),
-        tools=TOOLS,
-        system_prompt=SYSTEM_PROMPT,
-        middleware=[ModelCallLimitMiddleware(thread_limit=6, exit_behavior="end")],
-    )
-    suffix = "  [the player is holding something up to the camera]" if image_base64 else ""
-    out = agent.invoke({"messages": [
-        ("user", f"[session_id={session_id}] {player_text}{suffix}")
-    ]})
-
-    tools_called = [c["name"] for m in out["messages"]
-                    if isinstance(m, AIMessage) for c in (m.tool_calls or [])]
-    reply = out["messages"][-1].content
-
-    record_turn(session, player_text, reply, bool(image_base64), tools_called)
-    return {"reply": reply, "tools_called": tools_called, "had_image": bool(image_base64)}
+    Preserve the public contract at the top of this file. A photo must be available to
+    ``scan_shape`` for this turn but must never enter the agent messages or transcript.
+    Record exactly one turn, including the ordered tool trajectory, and return the reply,
+    trajectory and camera-use flag. Unknown session ids fail before invoking a model.
+    """
+    raise NotImplementedError("TODO-3")
 
 
 if __name__ == "__main__":
     import base64
     import pathlib
 
+    from .env import load_env
+
+    load_env()
     s = new_session()
     print(f"session {s['session_id']}")
     print(f"(server-side only: passcode {s['passcode']})\n")
@@ -137,6 +109,6 @@ if __name__ == "__main__":
         if line.startswith("photo "):
             img = base64.b64encode(pathlib.Path(line[6:].strip()).read_bytes()).decode()
             line = "I am holding it up to the camera."
-        r = _reference_take_turn(s["session_id"], line, img)
+        r = take_turn(s["session_id"], line, img)
         print(f"enigma > {r['reply']}")
         print(f"          [tools {r['tools_called']}  entered {s['entered']}]\n")

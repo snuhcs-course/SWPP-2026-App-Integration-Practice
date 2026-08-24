@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- DESIGN.md: "The system has no light-mode surface." Always dark. -->
+    <!-- The escape-room interface uses one consistent dark theme. -->
     <style name="Base.Theme.EscapeRoom" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>

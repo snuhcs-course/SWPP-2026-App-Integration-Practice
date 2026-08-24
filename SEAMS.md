@@ -9,9 +9,9 @@ Every TODO below sits on an arrow, never inside a box. That is deliberate.
 
 | Exercise | Seam | What you write | Where |
 |---|---|---|---|
-| **1** | Django → Agent | `build_agent()` — tools, prompt, call cap | `server/enigma_agent.py` |
-| **2** | Agent → Django | `take_turn()` — park the photo, run the agent | `server/enigma_agent.py` |
-| **3** | Android → Django | `BASE_URL` + read timeout | `data/network/RetrofitInstance.kt` |
+| **1** | Android → Django | `BASE_URL` + read timeout | `data/network/RetrofitInstance.kt` |
+| **2** | Django → Agent | `build_agent()` — tools, prompt, call cap | `server/enigma_agent.py` |
+| **3** | Agent → Django | `take_turn()` — park the photo, run the agent | `server/enigma_agent.py` |
 | **4** | CameraX → app | `startCamera()` | `ui/camera/CameraActivity.kt` |
 | **5** | Camera → payload | `fileToBase64()` — downscale + `NO_WRAP` | `util/ImageUtils.kt` |
 | **6** | Django → Android | `say()` — coroutine, LiveData, `finally` | `ui/main/GameViewModel.kt` |
@@ -33,9 +33,11 @@ optional: one endpoint, with or without a photo.
 
 **How it breaks**
 - `127.0.0.1` from the emulator points at the emulator, not your laptop
-- Android blocks cleartext HTTP unless the manifest allows it (SnapDo already does)
+- Android blocks cleartext HTTP unless the manifest allows it (this project does)
 - a renamed field becomes a silent `null`, three layers from where it hurts
-- the default 10-second read timeout kills a 5-second VLM turn and looks like a network bug
+- a turn can include multiple model, tool, and vision round trips; although each model
+  response often takes 2–5 seconds, the total can exceed the default 10-second read
+  timeout and look like a network bug
 
 ### Seam 1b — the payload
 
@@ -58,7 +60,7 @@ The ViewModel owns the coroutine; the Activity only observes LiveData.
 
 **How it breaks**
 - no `finally`, so an exception leaves the spinner running for the rest of the game
-- a VLM turn takes 2–5s and the UI says nothing
+- one model response often takes 2–5s; a full turn can take longer, and the UI says nothing
 - two rapid taps launch two coroutines and the transcript interleaves
 
 ---
@@ -162,5 +164,11 @@ python simulated_player.py --games 40
 ```
 
 `--live` runs it through the real agent and the real VLM.
+
+For Android work without an API key, `ESCAPE_FAKE_MODEL=1` selects `server/offline.py`.
+That stub treats any attached image as a camera event and uses privileged server state
+to press the next correct key. It deliberately does not inspect the image. Use it to
+verify CameraX → Base64 → HTTP → LiveData flow only; it proves neither recognition nor
+the security properties of the real `scan_shape` path.
 
 See README, **Running it for real**, for the four levels of verification.

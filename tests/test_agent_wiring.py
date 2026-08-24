@@ -1,4 +1,4 @@
-"""Does the agent you built in Exercises 1 and 2 actually run?
+"""Does the agent you built in Exercises 2 and 3 actually run?
 
 The other tests never construct an agent. These do - against a FAKE model, so they
 need no API key, cost nothing, and cannot flake.

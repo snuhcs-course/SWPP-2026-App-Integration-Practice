@@ -11,8 +11,12 @@ import sys
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))          # so `import server.game` works
 
+from server.env import load_env             # noqa: E402  (needs sys.path first)
+
 
 def main():
+    # Read .env before anything constructs a model client.
+    load_env()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "escaperoom_site.settings")
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)

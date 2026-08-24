@@ -22,10 +22,9 @@ import com.example.escaperoom.util.padForSystemBars
 /**
  * The room. A transcript, a text box, and a camera button.
  *
- * One thing changed from SnapDo on purpose: last year CameraActivity called Retrofit
- * itself. Here it does not — it hands back a Base64 string and this Activity passes
- * it to the ViewModel. The network stays on one seam instead of two, which is the
- * whole reason you can test the camera and the network separately.
+ * CameraActivity hands back a Base64 string and this Activity passes it to the
+ * ViewModel. Keeping network access in the repository lets the camera and network
+ * boundaries be tested separately.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -99,8 +98,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.state.observe(this) { s ->
             if (s.escaped) {
-                // The single yellow moment in the app. DESIGN.md: the yellow is
-                // scarce at the element level, which is what makes it land.
+                // Reserve the primary color for the successful escape state.
                 status.text = "the door is open  ·  ${s.turns} turns"
                 status.setTextColor(ContextCompat.getColor(this, R.color.primary))
             } else {
