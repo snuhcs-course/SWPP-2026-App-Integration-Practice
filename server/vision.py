@@ -24,7 +24,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-MODEL = "gpt-5-nano"
+MODEL = "gemini-3.5-flash"
 
 ShapeName = Literal["triangle", "square", "pentagon", "hexagon",
                     "heptagon", "octagon", "none"]
@@ -62,9 +62,9 @@ If no single clear polygon fills the frame, answer shape="none"."""
 def describe(image_base64: str) -> ShapeReading:
     """Call the VLM. Replace or stub this in tests."""
     from langchain_core.messages import HumanMessage, SystemMessage
-    from langchain_openai import ChatOpenAI
+    from langchain_google_genai import ChatGoogleGenerativeAI
 
-    llm = ChatOpenAI(model=MODEL).with_structured_output(ShapeReading)
+    llm = ChatGoogleGenerativeAI(model=MODEL).with_structured_output(ShapeReading)
     return llm.invoke([
         SystemMessage(content=VISION_PROMPT),
         HumanMessage(content=[
@@ -76,4 +76,4 @@ def describe(image_base64: str) -> ShapeReading:
 
 
 def available() -> bool:
-    return bool(os.environ.get("OPENAI_API_KEY"))
+    return bool(os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY"))

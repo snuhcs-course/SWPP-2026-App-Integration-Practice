@@ -140,7 +140,23 @@ class CameraActivity : AppCompatActivity() {
      * provider callbacks belong on the main executor.
      */
     private fun startCamera() {
-        // TODO-4
+        // TODO-4: CameraX hasn't been covered in lecture yet - we go deep on it next
+        // week. For today, read through the answer below and understand the shape
+        // (preview -> previewView, non-null imageCapture, unbindAll before rebinding,
+        // main executor) rather than deriving it from scratch.
+        //
+        // val future = ProcessCameraProvider.getInstance(this)
+        // future.addListener({
+        //     val provider = future.get()
+        //     val preview = Preview.Builder().build().also {
+        //         it.setSurfaceProvider(previewView.surfaceProvider)
+        //     }
+        //     imageCapture = ImageCapture.Builder().build()
+        //     val selector = CameraSelector.Builder()
+        //         .requireLensFacing(lensFacing).build()
+        //     provider.unbindAll()               // the line everyone forgets
+        //     provider.bindToLifecycle(this, selector, preview, imageCapture)
+        // }, ContextCompat.getMainExecutor(this))
     }
 
     override fun onRequestPermissionsResult(

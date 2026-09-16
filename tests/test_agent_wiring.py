@@ -46,9 +46,9 @@ def _call(name, args, id_):
 
 @pytest.fixture
 def wired(monkeypatch):
-    """Build the real agent, but with a scripted model instead of ChatOpenAI."""
+    """Build the real agent, but with a scripted model instead of ChatGoogleGenerativeAI."""
     def install(*messages):
-        monkeypatch.setattr(enigma_agent, "ChatOpenAI",
+        monkeypatch.setattr(enigma_agent, "ChatGoogleGenerativeAI",
                             lambda **_kw: _script(*messages))
     return install
 

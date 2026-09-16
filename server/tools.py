@@ -3,7 +3,7 @@
 Week 5's five principles, applied to a door that must not open:
 
   1. few arguments            -> every tool is scoped by session_id and nothing else
-  2. enums, not free strings  -> give_hint(riddle_id: Literal[1, 2, 3])
+  2. enums, not free strings  -> give_hint(riddle_id: Literal["1", "2", "3"])
   3. failure messages are prompts -> NOT_FOUND: ... says what to do next
   4. "nothing found" is explicit  -> never return "" or None
   5. NOT building a tool is design -> read the list below and notice what is missing
@@ -28,7 +28,7 @@ from .game import CODE_LENGTH, MAX_TURNS, SHAPES, get, press
 from .game import clear_entry as _clear_entry
 from .vision import describe
 
-RiddleId = Literal[1, 2, 3]
+RiddleId = Literal["1", "2", "3"]
 
 
 def get_room_state(session_id: str) -> dict | str:
@@ -62,7 +62,11 @@ def give_hint(session_id: str, riddle_id: RiddleId) -> str:
     s = get(session_id)
     if s is None:
         return f"NOT_FOUND: no session {session_id!r}."
-    riddle = next((r for r in s["riddles"] if r["id"] == riddle_id), None)
+    # str() on both sides: direct calls (tests, simulated_player.py) pass an int;
+    # a model-driven call arrives as the str the schema below promises. Gemini's
+    # function-calling Schema.enum accepts only strings - a bare int enum fails
+    # schema construction for every tool call, not just this one.
+    riddle = next((r for r in s["riddles"] if str(r["id"]) == str(riddle_id)), None)
     if riddle is None:
         valid = [r["id"] for r in s["riddles"]]
         return f"NOT_FOUND: riddle_id must be one of {valid}, got {riddle_id!r}."

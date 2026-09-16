@@ -114,7 +114,7 @@ def main() -> None:
     ap.add_argument("--strategy",
                     choices=["honest", "cheat", "jailbreak", "brute", "mixed"],
                     default="mixed")
-    ap.add_argument("--live", action="store_true", help="needs OPENAI_API_KEY")
+    ap.add_argument("--live", action="store_true", help="needs GOOGLE_API_KEY")
     args = ap.parse_args()
 
     take_turn = None

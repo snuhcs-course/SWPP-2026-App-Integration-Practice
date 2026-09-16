@@ -4,14 +4,14 @@ Configuration is read where the process starts - manage.py, the terminal player,
 the simulator - and never inside library code. Import a module and it should not
 quietly reach into your filesystem.
 
-The key itself is only ever needed by the SERVER. `langchain_openai.ChatOpenAI`
-reads the OPENAI_API_KEY environment variable when it is constructed, so all this
+The key itself is only ever needed by the SERVER. `langchain_google_genai.ChatGoogleGenerativeAI`
+reads the GOOGLE_API_KEY environment variable when it is constructed, so all this
 has to do is put the value there before the first construction.
 
-    OPENAI_API_KEY=sk-...
+    GOOGLE_API_KEY=...
 
 goes in a file called `.env` at the root of this repo. `.gitignore` already lists
-it. An existing environment variable always wins, so `OPENAI_API_KEY=... python ...`
+it. An existing environment variable always wins, so `GOOGLE_API_KEY=... python ...`
 still overrides the file for one run.
 """
 

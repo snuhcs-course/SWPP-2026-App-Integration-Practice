@@ -64,9 +64,26 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
      * `error`, and no failure may leave the thinking indicator stuck on.
      */
     fun say(text: String, imageBase64: String? = null) {
-        viewModelScope.launch {
-            // TODO-6
-        }
+        // TODO-6: today, read through the answer below and understand the shape
+        // (show the line immediately, thinking=true for the suspend call, reply +
+        // state on success, error on failure, thinking=false in finally no matter
+        // what) rather than deriving it from scratch.
+        //
+        // val sessionId = _state.value?.session_id ?: return
+        // viewModelScope.launch {
+        //     append(Line("you", text, imageBase64 != null))
+        //     _thinking.value = true                 // the turn takes 2-5 seconds
+        //     try {
+        //         val response = repository.say(sessionId, text, imageBase64)
+        //         append(Line("enigma", response.reply))
+        //         _state.value = response.state
+        //     } catch (e: Exception) {
+        //         Log.e("GameViewModel", "say failed", e)
+        //         _error.value = "The Enigma did not answer. Is the server running?"
+        //     } finally {
+        //         _thinking.value = false            // <- the whole exercise
+        //     }
+        // }
     }
 
     private fun append(line: Line) {
