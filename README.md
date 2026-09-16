@@ -1,6 +1,6 @@
-# Week 6 — App Integration: the Escape Room
+# Week 3 — App Integration: the Escape Room
 
-**SWPP 2026 Fall · one 3-hour session**
+**SWPP 2026 Fall**
 
 A player is locked in a room with **The Enigma**, an ancient lock. Four digits open the
 door — but there is no keypad. **You enter a digit by holding a paper polygon up to the
@@ -98,8 +98,8 @@ Edit the files in `client/` directly. There is no second copy to keep in sync.
 ## Setup
 
 ```bash
-conda create -n swpp6 python=3.11
-conda activate swpp6
+conda create -n swpp3 python=3.11
+conda activate swpp3
 pip install -r requirements.txt
 
 cp .env.example .env        # then put your key in it — .env is gitignored
@@ -324,31 +324,3 @@ screen and use the in-app shutter.
 test in this repo exercises CameraX, a real device network, or the visible UI flow.
 Exercises 1 and 4–6 therefore still need to be verified by running the app and using the
 table above.
-
----
-
-## Session plan (180 min)
-
-| time | block | what |
-|---|---|---|
-| 0:00 (10) | The seams | the system diagram; why every bug lives at a boundary |
-| 0:10 (10) | **Exercise 1** | `BASE_URL` — get the phone talking to Django before anything else |
-| 0:20 (15) | Design | the game, the API, where the secret lives |
-| 0:35 (35) | Exercises 2–3 | the Enigma answers; `pytest` goes green |
-| 1:10 (10) | break | |
-| 1:20 (30) | Exercises 4–5 | camera, downscale, Base64 — watch the payload size |
-| 1:50 (20) | Exercise 6 | the coroutine, and the `finally` block |
-| 2:10 (20) | Play | pair up, one printed keypad each |
-| 2:30 (20) | Red-team | write on the paper; try to talk the door open |
-| 2:50 (10) | Wrap | walls and wishes |
-
----
-
-## Submissions
-
-`<StudentID>_<Name>_week6.zip` into eTL:
-
-- `server/enigma_agent.py` (Exercises 2–3)
-- the four Kotlin files you edited under `client/app/src/main/java/com/example/escaperoom/`
-- `redteam.md` — four attacks: what each one got you, and which line stopped it
-- a screenshot of the app after the door opens
