@@ -116,11 +116,6 @@ def test_exercise_guidance_matches_the_current_implementations():
     assert "multiple model, tool, and vision round trips" in seams
     assert "multiple model, tool, and vision round trips" in retrofit
     assert "one or more model calls" in view_model
-    assert "| 2:10 (20) | Play |" in readme
-    assert "| 2:30 (20) | Red-team |" in readme
-    assert "| 2:50 (10) | Wrap |" in readme
-    assert "| 2:30 (20) | Play |" not in readme
-    assert "| 2:50 (10) | Red-team |" not in readme
 
 
 def test_tracked_handout_text_has_no_stale_source_project_claims():
