@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         val spinner = findViewById<ProgressBar>(R.id.progressThinking)
         val status = findViewById<TextView>(R.id.tvStatus)
         val emptyHint = findViewById<TextView>(R.id.tvEmptyHint)
+        val inputRow = findViewById<View>(R.id.inputRow)
+        val btnRetry = findViewById<Button>(R.id.btnRetry)
+
+        btnRetry.setOnClickListener { viewModel.retry() }
 
         btnSend.setOnClickListener {
             val text = input.text.toString().trim()
@@ -100,7 +104,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.state.observe(this) { s ->
-            if (s.escaped) {
+            val gameOver = s.escaped || s.turns_left <= 0
+            inputRow.visibility = if (gameOver) View.GONE else View.VISIBLE
+            btnRetry.visibility = if (gameOver) View.VISIBLE else View.GONE
+
+            if (s.turns_left <= 0) {
+                status.text = "out of turns"
+                status.setTextColor(
+                    ContextCompat.getColor(this, R.color.accent_rose)
+                )
+            } else if (s.escaped) {
                 // Reserve the primary color for the successful escape state.
                 status.text = "the door is open  ·  ${s.turns} turns"
                 status.setTextColor(ContextCompat.getColor(this, R.color.primary))

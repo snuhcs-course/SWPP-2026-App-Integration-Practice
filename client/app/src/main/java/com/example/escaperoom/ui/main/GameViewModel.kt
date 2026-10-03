@@ -38,6 +38,13 @@ class GameViewModel(private val repository: GameRepository) : ViewModel() {
         startSession()
     }
 
+    /** Start over in a new session, with a new passcode. */
+    fun retry() {
+        _transcript.value = emptyList()
+        _error.value = null
+        startSession()
+    }
+
     private fun startSession() {
         viewModelScope.launch {
             try {
